@@ -13,10 +13,10 @@ import java.util.TreeMap;
 
 public class Items {
 	int priority;
-	Part item;
+	Parts item;
 	AVLTreeMap<Date, String> Log = new AVLTreeMap<Date, String>();
 	
-	public Items(Part item, String error) {
+	public Items(Parts item, String error) {
 		this.item = item;
 		addLog(error);
 	}

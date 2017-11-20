@@ -15,7 +15,7 @@ public class A3 implements TBD{
 	}
 	
 	public String getInstances(Parts part) {
-		String item =part.toString();
+		String item = part.toString();
 		if (ITEMS_LOGS.containsKey(item)) {
 			return ITEMS_LOGS.get(item);
 		}
