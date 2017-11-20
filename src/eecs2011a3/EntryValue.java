@@ -12,4 +12,8 @@ public class EntryValue {
 		this.error = error;
 		this.date = new Date();
 	}
+	
+	public String toString() {
+		return "Part: " + sensor.toString() + ",\nError: " + error.toString() + ", \nDate: " + date;
+	}
 }

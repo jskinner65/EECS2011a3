@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.TreeMap;
 
 public class AVLTreeMap<K, V> extends TreeMap<K, V> {
-
+/*
 	public AVLTreeMap() {
 		super();
 	}
@@ -62,4 +62,6 @@ public class AVLTreeMap<K, V> extends TreeMap<K, V> {
 		if (!isRoot(p))
 			rebalance(parent(p));
 	}
+
+*/
 }

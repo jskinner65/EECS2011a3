@@ -11,7 +11,9 @@ public class Log {
 		try {
 			//Writes to a text file.
 			PrintWriter out = new PrintWriter(FILENAME);
-				out.write( A3.ITEMS_LOGS.get(0));
+			for (int i =0; i<A3.ITEMS_LOGS.size(); i++) {
+				out.write( A3.ITEMS_LOGS.get(0).toString());
+			}
 			out.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
