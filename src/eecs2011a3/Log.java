@@ -11,17 +11,16 @@ public class Log {
 		try {
 			//Writes to a text file.
 			PrintWriter out = new PrintWriter(FILENAME);
-			for (int i =0; i<A3.ITEMS_LOGS.size(); i++) {
-				System.out.println(A3.ITEMS_LOGS.get("" + A3.ITEMS_LOGS.firstEntry()));
-				out.println(A3.ITEMS_LOGS.firstKey() + " " + A3.ITEMS_LOGS.get("" + A3.ITEMS_LOGS.firstEntry()));
-				ITEMS_LOGS_BACKUP.put("" +A3.ITEMS_LOGS.firstEntry(), A3.ITEMS_LOGS.get("" +A3.ITEMS_LOGS.firstEntry()));
-				A3.ITEMS_LOGS.remove("" + 0);
+			int size = A3.ITEMS_LOGS.size();
+			for (int i =0; i<size; i++) {
+				out.println(A3.ITEMS_LOGS.firstEntry());
+				ITEMS_LOGS_BACKUP.put("" + A3.ITEMS_LOGS.firstKey(), A3.ITEMS_LOGS.get( A3.ITEMS_LOGS.firstKey()));
+				A3.ITEMS_LOGS.remove("" +A3.ITEMS_LOGS.firstKey());
 			}
 			out.close();
-			for (int i =0; i<ITEMS_LOGS_BACKUP.size(); i++) {
-				out.println(ITEMS_LOGS_BACKUP.firstKey() + " " + ITEMS_LOGS_BACKUP.get("" + ITEMS_LOGS_BACKUP.firstEntry()));
-				A3.ITEMS_LOGS.put("" +ITEMS_LOGS_BACKUP.firstEntry(), ITEMS_LOGS_BACKUP.get("" +ITEMS_LOGS_BACKUP.firstEntry()));
-				ITEMS_LOGS_BACKUP.remove("" + ITEMS_LOGS_BACKUP.firstEntry());
+			for (int i =0; i<size; i++) {
+				A3.ITEMS_LOGS.put("" +ITEMS_LOGS_BACKUP.firstKey(), ITEMS_LOGS_BACKUP.get( ITEMS_LOGS_BACKUP.firstKey()));
+				ITEMS_LOGS_BACKUP.remove("" +ITEMS_LOGS_BACKUP.firstKey());
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
