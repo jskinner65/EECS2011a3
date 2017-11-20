@@ -3,7 +3,7 @@ package eecs2011a3;
 import java.util.TreeMap;
 
 public class A3 implements TBD{
-	private static final TreeMap<String, String> ITEMS_LOGS = new TreeMap<String, String>();
+	public static final TreeMap<String, String> ITEMS_LOGS = new TreeMap<String, String>();
 	
 	
 	public A3() {
