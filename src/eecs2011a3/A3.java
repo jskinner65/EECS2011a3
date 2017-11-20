@@ -89,7 +89,7 @@ public class A3 implements TBD{
 		
 		
 		
-		
+		Log.saveLog();
 		
 		
 		
