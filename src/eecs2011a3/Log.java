@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.TreeMap;
 
 
@@ -73,7 +72,6 @@ public class Log {
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void getLines(BufferedReader br) throws IOException {
 		String line = br.readLine();
 		if (!(line == null)) {
