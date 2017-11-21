@@ -1,11 +1,15 @@
 package eecs2011a3;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.TreeMap;
+
 
 public class Log {
 	private static final TreeMap<String, EntryValue> ITEMS_LOGS_BACKUP = new TreeMap<String, EntryValue>();
@@ -51,6 +55,32 @@ public class Log {
 			e.printStackTrace();
 		}
 
+	}
+
+	public static void retrieveLog() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(FILENAME));
+			try {
+				getLines(br);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println("File not available.");
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("File containing high scores not found.");
+		}
+
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static void getLines(BufferedReader br) throws IOException {
+		String line = br.readLine();
+		if (!(line == null)) {
+			A3Version1.ITEMS_LOGS.put(line.substring(0, 1),
+					new EntryValue((line.substring(2))));
+			getLines(br);
+		}
 	}
 
 	public static void clearLog() {

@@ -59,6 +59,13 @@ public class A3Version1 implements TBD {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		//TEST_CASES.runTestsVersion1();
+		Log.retrieveLog();
 		TEST_CASES.runTestsVersion1();
+		A3Version1 a3 = new A3Version1();
+		
+		int priority5 = 10;
+		a3.getInstances(priority5, Parts.BACK_RIGHT_TIRE, Errors.P88_HIGH_PRESSURE);
+
 	}
 }
