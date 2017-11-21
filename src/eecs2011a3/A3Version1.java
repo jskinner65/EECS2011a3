@@ -13,14 +13,15 @@ public class A3Version1 implements TBD {
 
 	}
 
-	public EntryValue getInstances(int priority, Parts part, Errors error) {
-		if (ITEMS_LOGS.containsKey("" + priority)) {
-			return ITEMS_LOGS.get("" + priority);
+	public EntryValue getInstances(Parts part, Errors error) {
+		String priority = error.toString().substring(1,3);
+		if (ITEMS_LOGS.containsKey("" + priority + ";"+ part.ordinal())) {
+			return ITEMS_LOGS.get("" + priority + ";"+ part.ordinal());
 		} else {
 			EntryValue ev = new EntryValue(part, error);
-			ITEMS_LOGS.put("" + priority, ev);
-			Log.add("" + priority, ev);
-			return ITEMS_LOGS.get("" + priority);
+			ITEMS_LOGS.put("" + priority+ ";"+ part.ordinal(), ev);
+			Log.add("" + priority+ ";"+ part.ordinal(), ev);
+			return ITEMS_LOGS.get("" + priority+ ";"+ part.ordinal());
 		}
 	}
 
@@ -64,8 +65,7 @@ public class A3Version1 implements TBD {
 		TEST_CASES.runTestsVersion1();
 		A3Version1 a3 = new A3Version1();
 		
-		int priority5 = 10;
-		a3.getInstances(priority5, Parts.BACK_RIGHT_TIRE, Errors.P88_HIGH_PRESSURE);
+		a3.getInstances(Parts.BACK_RIGHT_TIRE, Errors.P88_HIGH_PRESSURE);
 
 	}
 }
