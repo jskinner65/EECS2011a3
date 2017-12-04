@@ -18,14 +18,14 @@ public class TEST_CASES {
 		System.out.println();
 		System.out.println(ev4);
 		System.out.println();
-		System.out.println( ev5);
+		System.out.println(ev5);
 		a3.run();
 		Log.saveLog();
 		Log.saveLog();
 	}
 
 	public static void runTestsVersion2() {
-	
+
 	}
 
 }

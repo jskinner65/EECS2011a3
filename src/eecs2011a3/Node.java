@@ -1,10 +1,11 @@
 package eecs2011a3;
 
 class Node<k> {
-	int key, height;
+	String key;
+	int height;
 	Node<k> left, right;
 
-	public Node(int d) {
+	public Node(String d) {
 		key = d;
 		height = 1;
 	}

@@ -14,7 +14,7 @@ import java.util.TreeMap;
 public class Items {
 	int priority;
 	Parts item;
-	AVLTreeMap<Date, String> Log = new AVLTreeMap<Date, String>();
+	TreeMap<Date, String> Log = new TreeMap<Date, String>();
 	
 	public Items(Parts item, String error) {
 		this.item = item;

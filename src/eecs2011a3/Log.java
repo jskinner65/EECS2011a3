@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.TreeMap;
 
-
 public class Log {
 	private static final TreeMap<String, EntryValue> ITEMS_LOGS_BACKUP = new TreeMap<String, EntryValue>();
 	private static final String FILENAME = "log.txt";
@@ -21,7 +20,7 @@ public class Log {
 			int size = A3Version1.ITEMS_LOGS.size();
 			for (int i = 0; i < size; i++) {
 				out.println(A3Version1.ITEMS_LOGS.firstEntry());
-				System.out.println("OUT:   " +A3Version1.ITEMS_LOGS.firstEntry());
+				System.out.println("OUT:   " + A3Version1.ITEMS_LOGS.firstEntry());
 				ITEMS_LOGS_BACKUP.put("" + A3Version1.ITEMS_LOGS.firstKey(),
 						A3Version1.ITEMS_LOGS.get(A3Version1.ITEMS_LOGS.firstKey()));
 				A3Version1.ITEMS_LOGS.remove("" + A3Version1.ITEMS_LOGS.firstKey());
@@ -76,8 +75,7 @@ public class Log {
 	private static void getLines(BufferedReader br) throws IOException {
 		String line = br.readLine();
 		if (!(line == null)) {
-			A3Version1.ITEMS_LOGS.put(line.substring(0, line.indexOf("=")),
-					new EntryValue((line.substring(2))));
+			A3Version1.ITEMS_LOGS.put(line.substring(0, line.indexOf("=")), new EntryValue((line.substring(2))));
 			getLines(br);
 		}
 	}

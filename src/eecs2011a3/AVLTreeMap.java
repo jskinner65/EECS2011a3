@@ -1,96 +1,115 @@
 package eecs2011a3;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.TreeMap;
 
-public class AVLTreeMap<K, V> extends TreeMap<K, V> {
-	Tree tree = new Tree();
-	/**
-	 * 
-	 */
+@SuppressWarnings("all")
+public class AVLTreeMap<K, V> {
+	Node root;
 
 	public AVLTreeMap() {
-		super();
-	}
-
-	public AVLTreeMap(Comparator<K> comp) {
-		super(comp);
-	}
-
-	protected int height(Position<Entry<K, V>> p) {
-		return tree.getAux(p);
 
 	}
 
-	protected void recomputeHeight(Position<Entry<K, V>> p) {
-		tree.setAux(p, 1 + Math.max(height(leftOf(p)), height(rightOf(p))));
-	}
+	/*
+	 * add the node to the root at the bottom left of the tree and rebalances the tree
+	 */
 
-	protected boolean isBalanced(Position<Entry<K, V>> p) {
-		return Math.abs(height(leftOf(p)) - height(rightOf(p))) <= 1;
-	}
-
-	private Position<Entry<K, V>> rightOf(Position<Entry<K, V>> p) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private Position<Entry<K, V>> leftOf(Position<Entry<K, V>> p) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	protected Position<Entry<K, V>> tallerChild(Position<Entry<K, V>> p) {
-		if (height(leftOf(p)) > height(rightOf(p)))
-			return leftOf(p);
-		if (height(leftOf(p)) < height(rightOf(p)))
-			return rightOf(p);
-		if (isRoot(p))
-			return leftOf(p);
-		if (p == leftOf(parentOf(p)))
-			return leftOf(p);
-		else
-			return rightOf(p);
-	}
-
-	private Position<Entry<K, V>> parentOf(Position<Entry<K, V>> p) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private boolean isRoot(Position<Entry<K, V>> p) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	protected void rebalance(Position<Entry<K, V>> p) {
-		int oldHeight, newHeight;
-		do {
-			oldHeight = height(p);
-			if (!isBalanced(p)) {
-				p = restructre(tallerChild(tallerChild(p)));
-				recomputeHeight(leftOf(p));
-				recomputeHeight(rightOf(p));
+	public void insertNode(Node node, Node newNode, String key) {
+		if (root == null) {
+			root = new Node<String>(key);
+		} else {
+			if (key != null) {
+				if (height(node) > 1) {
+					insertNode(node.left, null, key);
+				} else {
+					node.left = new Node<String>(key);
+				}
+			} else {
+				Node bot = getBottomNode(node);
+				bot.left = newNode;
+				root = rightRotate(node);
 			}
-			recomputeHeight(p);
-			newHeight = height(p);
-			p = parentOf(p);
-		} while (oldHeight != newHeight && p != null);
+		}
 	}
 
-	private Position<Entry<K, V>> restructre(Position<Entry<K, V>> tallerChild) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	/* finds the bottom left node */
+	public Node getBottomNode(Node node) {
+		boolean done = false;
+		Node tempNode = node;
+		Node result = null;
+		while (!done) {
+			if (node.left == null) {
+				result = tempNode;
+				done = true;
+			} else {
+				tempNode = tempNode.left;
+			}
+
+		}
+		return result;
 	}
 
-	protected void rebalanceInsert(Position<Entry<K, V>> p) {
-		rebalance(p);
+	/*
+	 * return the height of the node given.
+	 */
+	protected int height(Node node) {
+		return node.height;
 	}
 
-	protected void rebalanceDelete(Position<Entry<K, V>> p) {
-		if (!isRoot(p))
-			rebalance(parentOf(p));
+	
+	private int max(int a, int b) {
+		return (a > b) ? a : b;
 	}
 
+	/* performs a rotate Right based on the AVL algorithm */
+	private Node rightRotate(Node y) {
+		Node x = y.left;
+		Node T2 = x.right;
 
+		// Perform rotation
+		x.right = y;
+		y.left = T2;
+
+		// Update heights
+		y.height = max(height(y.left), height(y.right)) + 1;
+		x.height = max(height(x.left), height(x.right)) + 1;
+
+		// Return new root
+		return x;
+	}
+	
+	
+	/* performs a rotate left based on the AVL algorithm */
+	
+	private Node leftRotate(Node x) {
+		Node y = x.right;
+		Node T2 = y.left;
+
+		// Perform rotation
+		y.left = x;
+		x.right = T2;
+
+		// Update heights
+		x.height = max(height(x.left), height(x.right)) + 1;
+		y.height = max(height(y.left), height(y.right)) + 1;
+
+		// Return new root
+		return y;
+	}
+	
+	/*checks to see if the tree is balanced within one degree */	
+	protected boolean isBalanced(Node p) {
+		return Math.abs(height(p.left) - height(p.right)) <= 1;
+	}
+
+	
+	/* removes the selected node and re-balances the remainder */
+	private void delete(Node node) {
+		Node oldRight = node.right;
+		node = node.left;
+		insertNode(node, oldRight, null);
+	}
 }
