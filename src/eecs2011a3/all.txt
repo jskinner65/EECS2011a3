@@ -1,0 +1,418 @@
+package eecs2011a3;
+
+import java.util.TreeMap;
+
+public class A3Version1 {
+	public static final TreeMap<String, EntryValue> ITEMS_LOGS = new TreeMap<String, EntryValue>();
+
+	public A3Version1() {
+		; // intentionally blank
+	}
+
+	public void run() {
+
+	}
+
+	public EntryValue getInstances(Parts part, Errors error) {
+		String priority = error.toString().substring(1, 3);
+		if (ITEMS_LOGS.containsKey("" + priority + ";" + part.ordinal())) {
+			return ITEMS_LOGS.get("" + priority + ";" + part.ordinal());
+		} else {
+			EntryValue ev = new EntryValue(part, error);
+			ITEMS_LOGS.put("" + priority + ";" + part.ordinal(), ev);
+			Log.add("" + priority + ";" + part.ordinal(), ev);
+			return ITEMS_LOGS.get("" + priority + ";" + part.ordinal());
+		}
+	}
+
+
+
+	// ***************************************************************************************************
+	// ***************************************************************************************************
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		// TEST_CASES.runTestsVersion1();
+		Log.retrieveLog();
+		TEST_CASES.runTestsVersion1();
+		A3Version1 a3 = new A3Version1();
+
+		a3.getInstances(Parts.BACK_RIGHT_TIRE, Errors.P88_HIGH_PRESSURE);
+
+	}
+}
+package eecs2011a3;
+
+import java.util.Comparator;
+import java.util.Date;
+import java.util.TreeMap;
+
+@SuppressWarnings("all")
+public class AVLTreeMap<K, V> {
+	Node root;
+
+	public AVLTreeMap() {
+
+	}
+
+	/*
+	 * add the node to the root at the bottom left of the tree and rebalances the tree
+	 */
+
+	public void insertNode(Node node, Node newNode, String key) {
+		if (root == null) {
+			root = new Node<String>(key);
+		} else {
+			if (key != null) {
+				if (height(node) > 1) {
+					insertNode(node.left, null, key);
+				} else {
+					node.left = new Node<String>(key);
+				}
+			} else {
+				Node bot = getBottomNode(node);
+				bot.left = newNode;
+				root = rightRotate(node);
+			}
+		}
+	}
+
+	
+	/* finds the bottom left node */
+	public Node getBottomNode(Node node) {
+		boolean done = false;
+		Node tempNode = node;
+		Node result = null;
+		while (!done) {
+			if (node.left == null) {
+				result = tempNode;
+				done = true;
+			} else {
+				tempNode = tempNode.left;
+			}
+
+		}
+		return result;
+	}
+
+	/*
+	 * return the height of the node given.
+	 */
+	protected int height(Node node) {
+		return node.height;
+	}
+
+	
+	private int max(int a, int b) {
+		return (a > b) ? a : b;
+	}
+
+	/* performs a rotate Right based on the AVL algorithm */
+	private Node rightRotate(Node y) {
+		Node x = y.left;
+		Node T2 = x.right;
+
+		// Perform rotation
+		x.right = y;
+		y.left = T2;
+
+		// Update heights
+		y.height = max(height(y.left), height(y.right)) + 1;
+		x.height = max(height(x.left), height(x.right)) + 1;
+
+		// Return new root
+		return x;
+	}
+	
+	
+	/* performs a rotate left based on the AVL algorithm */
+	
+	private Node leftRotate(Node x) {
+		Node y = x.right;
+		Node T2 = y.left;
+
+		// Perform rotation
+		y.left = x;
+		x.right = T2;
+
+		// Update heights
+		x.height = max(height(x.left), height(x.right)) + 1;
+		y.height = max(height(y.left), height(y.right)) + 1;
+
+		// Return new root
+		return y;
+	}
+	
+	/*checks to see if the tree is balanced within one degree */	
+	protected boolean isBalanced(Node p) {
+		return Math.abs(height(p.left) - height(p.right)) <= 1;
+	}
+
+	
+	/* removes the selected node and re-balances the remainder */
+	private void delete(Node node) {
+		Node oldRight = node.right;
+		node = node.left;
+		insertNode(node, oldRight, null);
+	}
+}
+package eecs2011a3;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class EntryValue {
+	Parts sensor;
+	int priority;
+	Errors error;
+	Date date;
+
+	public EntryValue(Parts sensor, Errors error) {
+		this.sensor = sensor;
+		this.error = error;
+		this.date = new Date();
+		setPriority();
+	}
+
+	public EntryValue(String fromLog) {
+		System.out.println(fromLog.substring(fromLog.indexOf(" ") + 1, fromLog.indexOf(",")));
+		this.sensor = Parts.valueOf(fromLog.substring(fromLog.indexOf(" ") + 1, fromLog.indexOf(",")));
+		fromLog = fromLog.substring(fromLog.indexOf(",") + 1);
+		System.out.println(fromLog.substring(fromLog.indexOf(" ") + 1, fromLog.indexOf(",")));
+		this.error = Errors.valueOf(fromLog.substring(fromLog.indexOf(" ") + 1, fromLog.indexOf(",")));
+		fromLog = fromLog.substring(fromLog.indexOf(",") + 1);
+		DateFormat format = new SimpleDateFormat("MMM dd HH:mm:ss yyyy");
+		try {
+			System.out.println(fromLog.substring(11, 26) + " " + fromLog.substring(31));
+			this.date = format.parse(fromLog.substring(11, 26) + " " + fromLog.substring(31));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		setPriority();
+	}
+
+	public void setPriority() {
+		this.priority = Integer.parseInt(error.toString().substring(1, 2));
+	}
+
+	public String toString() {
+		return "Part: " + sensor.toString() + ",Error: " + error.toString() + ", Date: " + date;
+	}
+
+}
+package eecs2011a3;
+
+public enum Errors {
+	P98_UNKNOWN, P99_LOW_PRESSURE, P88_HIGH_PRESSURE, P99_LOW_BATTERY, B01_NO_BRAKES,
+
+}
+package eecs2011a3;
+
+import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
+
+/*  Each item has its own log so a mechanic can easily find a log based on an item
+ * 
+ * 
+ */
+
+
+
+public class Items {
+	int priority;
+	Parts item;
+	TreeMap<Date, String> Log = new TreeMap<Date, String>();
+	
+	public Items(Parts item, String error) {
+		this.item = item;
+		addLog(error);
+	}
+	
+	private void addLog(String Error) {
+		Log.put(new Date(), Error);  //Error has priority built into it  ("pp, Error")
+	}
+	
+	private void adjustPriority() {
+		for (int i = 0; i<Log.size(); i++) {
+			if (priority < Integer.parseInt(Log.get(i).substring(0,2))) {
+				priority =  Integer.parseInt(Log.get(i).substring(0,2));  //sets highest priority found to this.priority
+			}
+		}
+	}
+	
+	
+	
+	
+}
+package eecs2011a3;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.TreeMap;
+
+public class Log {
+	private static final TreeMap<String, EntryValue> ITEMS_LOGS_BACKUP = new TreeMap<String, EntryValue>();
+	private static final String FILENAME = "log.txt";
+
+	public static void saveLog() {
+		try {
+			// Writes to a text file.
+			PrintWriter out = new PrintWriter(FILENAME);
+			int size = A3Version1.ITEMS_LOGS.size();
+			for (int i = 0; i < size; i++) {
+				out.println(A3Version1.ITEMS_LOGS.firstEntry());
+				System.out.println("OUT:   " + A3Version1.ITEMS_LOGS.firstEntry());
+				ITEMS_LOGS_BACKUP.put("" + A3Version1.ITEMS_LOGS.firstKey(),
+						A3Version1.ITEMS_LOGS.get(A3Version1.ITEMS_LOGS.firstKey()));
+				A3Version1.ITEMS_LOGS.remove("" + A3Version1.ITEMS_LOGS.firstKey());
+			}
+			out.close();
+			for (int i = 0; i < size; i++) {
+				A3Version1.ITEMS_LOGS.put("" + ITEMS_LOGS_BACKUP.firstKey(),
+						ITEMS_LOGS_BACKUP.get(ITEMS_LOGS_BACKUP.firstKey()));
+				ITEMS_LOGS_BACKUP.remove("" + ITEMS_LOGS_BACKUP.firstKey());
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Log File ERROR.");
+		}
+	}
+
+	public static void add(String priority, EntryValue ev) {
+
+		BufferedWriter bw = null;
+
+		try {
+
+			bw = new BufferedWriter(new FileWriter(FILENAME, true));
+			bw.write(priority + "=" + ev);
+
+			bw.newLine();
+			bw.flush();
+			bw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void retrieveLog() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(FILENAME));
+			try {
+				getLines(br);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println("File not available.");
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("File containing high scores not found.");
+		}
+
+	}
+
+	private static void getLines(BufferedReader br) throws IOException {
+		String line = br.readLine();
+		if (!(line == null)) {
+			A3Version1.ITEMS_LOGS.put(line.substring(0, line.indexOf("=")), new EntryValue((line.substring(2))));
+			getLines(br);
+		}
+	}
+
+	public static void clearLog() {
+
+		PrintWriter out;
+		try {
+			out = new PrintWriter(FILENAME);
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+package eecs2011a3;
+
+class Node<k> {
+	String key;
+	int height;
+	Node<k> left, right;
+
+	public Node(String d) {
+		key = d;
+		height = 1;
+	}
+}
+package eecs2011a3;
+
+public enum Parts {
+	BRAKES, OIL, FRONT_LEFT_TIRE, FRONT_RIGHT_TIRE, BACK_LEFT_TIRE, BACK_RIGHT_TIRE, TIRES, SHOCKS, SUSPSNSION, WASHER_FLUID, LIGHTS
+}
+package eecs2011a3;
+
+public interface Position<E> {
+	// returns the stored element
+	// throws exception if position is not valid
+	E getElement() throws IllegalStateException;
+}
+package eecs2011a3;
+
+public class Readme {
+
+}
+package eecs2011a3;
+
+public interface TBD {
+	void viewLog();
+
+	void saveLog();
+
+	void retreiveLog();
+
+	void addToLog();
+
+	void reorganize();
+
+}
+package eecs2011a3;
+
+public class TEST_CASES {
+	public static void runTestsVersion1() {
+		Log.clearLog(); // starts with a clean log (for testing)
+		A3Version1 a3 = new A3Version1();
+		EntryValue ev = a3.getInstances(Parts.FRONT_RIGHT_TIRE, Errors.P88_HIGH_PRESSURE);
+		EntryValue ev2 = a3.getInstances(Parts.BRAKES, Errors.B01_NO_BRAKES);
+		EntryValue ev3 = a3.getInstances(Parts.OIL, Errors.P99_LOW_PRESSURE);
+		EntryValue ev4 = a3.getInstances(Parts.BACK_RIGHT_TIRE, Errors.P88_HIGH_PRESSURE);
+
+		EntryValue ev5 = a3.getInstances(Parts.BACK_RIGHT_TIRE, Errors.P88_HIGH_PRESSURE);
+		System.out.println(ev);
+		System.out.println();
+		System.out.println(ev2);
+		System.out.println();
+		System.out.println(ev3);
+		System.out.println();
+		System.out.println(ev4);
+		System.out.println();
+		System.out.println(ev5);
+		a3.run();
+		Log.saveLog();
+		Log.saveLog();
+	}
+
+	public static void runTestsVersion2() {
+
+	}
+
+}
